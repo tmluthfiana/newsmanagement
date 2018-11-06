@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Kumparan">
+
+	<title>Kumparan</title>
+
+	<link rel="shortcut icon" href="{{BaseUrl}}static/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="{{BaseUrl}}static/favicon.ico" type="image/x-icon">
+
+    <script src="{{BaseUrl}}static/js/jquery.min.js"></script>
+	<script src="{{BaseUrl}}static/js/knockout.min.js"></script>
+	<script src="{{BaseUrl}}static/js/ko-mapping.js"></script>
+	<script src="{{BaseUrl}}static/js/kendoui/js/kendo.all.min.js"></script>
+	<script src="{{BaseUrl}}static/js/knockout-kendo.min.js"></script>
+	<script src="{{BaseUrl}}static/js/knockout.validation.min.js"></script>
+	<script src="{{BaseUrl}}static/js/bootstrap.min.js"></script>
+	<script src="{{BaseUrl}}static/js/bootbox.js"></script>
+	<script src="{{BaseUrl}}static/js/sweet-alert.min.js"></script>
+	<script src="{{BaseUrl}}static/js/ec-common.js"></script>
+
+	<link href="{{BaseUrl}}static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.default.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.common.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.material.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.common-bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.dataviz.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.dataviz.bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.dataviz.metro.min.css" type="text/css" rel="stylesheet" />
+	<link href="{{BaseUrl}}static/js/kendoui/styles/kendo.metro.min.css" type="text/css" rel="stylesheet" />
+
+	<link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/sweet-alert.css">
+	<link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/default.css">
+	<link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/custom.css">
+	<link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/loader.css">
+
+	<script type="text/javascript">
+		var model = {
+			Processing: ko.observable(false)
+		};
+	</script>
+</head>
+<body>
+
+<div id="wrapper" class="bodyonly">
+
+	<div class="container-fluid">
+
+		<div class="content">
+			{{.Content}}
+		</div>
+
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	ko.applyBindings(model);
+</script>
+
+</body>
+</html>
+

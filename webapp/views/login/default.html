@@ -1,0 +1,235 @@
+<script>
+	model.Processing(false);
+</script>
+
+<div class="login-wrapper">
+	<div class="row">
+      <div class="col-md-9 login-info-wrapper"></div>
+	   <div class="col-md-3 login-form-wrapper">
+         <div class="row">
+            <div class="col-md-12">
+               <div class="logo">
+                  <img src="{{BaseUrl}}static/img/logo.png" />
+               </div>
+            </div>
+            <div class="col-md-12">
+               <div class="login-form-content" data-bind="visible: !(model.Processing())">
+                  <div class="form-group">
+                     <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                        <input type="email" id="username" class="form-control" placeholder="Username">
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                        <input type="password" id="password" class="form-control" placeholder="Password">
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <div class="col-md-12 no-padding">
+                        <div class="pull-right">
+                           <button class="btn btn-primary btn-login pull-right" onclick="DoLogin()"><i class="fa fa-lock"></i>&nbsp;&nbsp;Sign In</button>
+                        </div>
+                        <div class="pull-left">
+                           <p class="login-forgot" data-bind="visible: true">
+                              <!--<a data-toggle="modal" data-target="#modalForgotPassword">Forgot your password?</a>-->
+                           </p>
+                        </div>
+                     </div>
+                     <!--<hr>
+                     <!--<div class="col-md-12 no-padding">
+                        <p class="login-forgot" data-bind="visible: true">
+                           <span class="info-text">Don't Have Account?</span>
+                           <a class="login-link" data-toggle="modal" data-target="#modalRegister">try it free</a>
+                        </p>
+                     </div>!-->
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row footer">
+            <div class="col-md-12">
+               
+            </div>
+         </div>
+			{{template "_loader_alt.html"}}
+		</div>
+	</div>
+</div>
+
+<!-- Form Modal -->
+<div class="modal fade modal-fade-in-scale-up" id="modalForgotPassword" aria-hidden="true"
+aria-labelledby="modalTitle" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">×</span>
+      </button>
+      <h4 class="modal-title modal-title">Forgot Password</h4>
+    </div>
+    <div class="modal-body">
+      <div class="form-input row step1" >
+        <div class="form-group col-md-12">
+          <p class="ket">*Please Enter Your Email Address To Reset Your Password!</p>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="control-label col-md-4">Email</label>
+          <div class="control-input col-md-6">
+            <input type="email" name="email" id="email" class="input-sm form-control" placeholder="Type Email" />
+            <span class="k-invalid-msg" data-for="email"></span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger margin-0" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary step1" onclick="SendEmail()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Form Modal -->
+
+<!-- Form Modal -->
+<div class="modal fade modal-fade-in-scale-up" id="modalRegister" aria-hidden="true"
+aria-labelledby="modalTitle" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">×</span>
+      </button>
+      <h4 class="modal-title modal-title">Register</h4>
+    </div>
+    <div class="modal-body">
+      <div class="form-input row step1" >
+        <div class="form-group col-md-12">
+          <p class="ket">Register YourSelf Free!!</p>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="control-label col-md-4">Email</label>
+          <div class="control-input col-md-6">
+            <input type="email" name="email" id="emailregister" class="input-sm form-control" placeholder="Type Email" />
+            <span class="k-invalid-msg" data-for="email"></span>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="control-label col-md-4">Password</label>
+          <div class="control-input col-md-6">
+            <input type="password" name="password" id="passwordregister" class="input-sm form-control" placeholder="Type Password" />
+            <span class="k-invalid-msg" data-for="email"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-danger margin-0" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary step1" onclick="DoRegistration()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Form Modal -->
+
+<script>
+function DoLogin() {
+	var username = $('#username').val();
+	var passwd = $('#password').val();
+	var url = "{{BaseUrl}}login/dologin";
+	var param = { Username: username, Password: passwd };
+  console.log(param);
+	model.Processing(true);
+	ajaxPost(url, param, function(data){
+		if(data.IsLogged) {
+			window.location.href = '{{BaseUrl}}databrowser/ardata';
+			model.Processing(false);
+		}
+		else {
+			swal('Login Failed!', data.Message, 'error');
+			model.Processing(false);
+		}
+	}, undefined);
+}
+</script>
+
+<script type="text/javascript">
+function DoRegistration(){
+    var email = $('#emailregister').val();
+    var passwd = $('#passwordregister').val();
+    if(email == "" || passwd == ""){
+      swal("Complete Your Registration Form First","","error");
+    }else{
+      var url = "{{BaseUrl}}login/doregistration";
+      var param = {"Email":email,"Password":passwd};
+      model.Processing(true);
+      ajaxPost(url,param,function(data){
+          if(data.IsSuccess) {
+              swal("Registration Success, Please activate your account through link sent to your email","","success");
+              model.Processing(false);
+              $('#modalRegister').modal('hide');
+              $('#emailregister').val('');
+              $('#passwordregister').val('');
+          }
+          else {
+              swal('Registration Failed!', data.Message, 'error');
+              model.Processing(false);
+          }
+      });
+    }
+}
+
+function SendEmail(){
+    var email = $("#email").val();
+
+    if(email == ""){
+      swal("Fill Your Email Address!!!","","error");
+    }else{
+      var param = {"Email":email};
+      var url = "{{BaseUrl}}login/sendemailrecovery";
+      model.Processing(true);
+      ajaxPost(url, param, function(data){
+                if(data.IsSuccess) {
+                    swal("Check Your Email To Recover Your Password","","success");
+                    model.Processing(false);
+                    clear();
+                }
+                else {
+                    swal('Failed To Send Email!', data.Message, 'error');
+                    model.Processing(false);
+                }
+            })
+
+    }
+  }
+
+isFormValid = function (selector) {
+    resetValidation(selector);
+    var $validator = $(selector).data("kendoValidator");
+    return ($validator.validate());
+};
+
+resetValidation = function (selectorID) {
+    var $form = $(selectorID).data("kendoValidator");
+    if ($form == undefined) {
+        $(selectorID).kendoValidator();
+        $form = $(selectorID).data("kendoValidator");
+    }
+
+    $form.hideMessages();
+};
+
+$(document).ready(function(){
+  console.log("test");
+  $('.carousel').carousel({
+      interval: 10000, //changes the speed
+      pause: "false"
+  })
+});
+</script>

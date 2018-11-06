@@ -1,0 +1,84 @@
+<script>
+	var UserProfileDashboardObj = {
+		EmployeeId: '',
+		Name: '',
+		Location: '',
+		Designation: '',
+		Department: '',
+		NumberOfTeam: 0,
+		Lead: '',
+		JoinDate: '',
+		HoD: '',
+		Management: '',
+		Email: '',
+		JoinDate: '',
+		ImgPhoto: '',
+		ImgPath: ''
+	};
+	model.CurrEmpIdDashboard = ko.observable('');
+	model.UserProfileDashboard = ko.observable(UserProfileDashboardObj);
+	function LoadUserProfileDashboard() {
+		var sUrl = "{{BaseUrl}}userprofile/getuserprofile";
+		ajaxPost(sUrl, { EmployeeId: model.CurrEmpIdDashboard() }, function(data){
+			UserProfileDashboardObj.EmployeeId = data.EmployeeId;
+			UserProfileDashboardObj.Name = data.EmployeeName;
+			UserProfileDashboardObj.Location = data.Location.LocationName;
+			UserProfileDashboardObj.Designation = data.Designation.DesignationName;
+			UserProfileDashboardObj.Department = data.Department.DepartmentName;
+			UserProfileDashboardObj.Lead = data.LeadName;
+			UserProfileDashboardObj.HoD = data.HODName;
+			UserProfileDashboardObj.Management = data.ManagementName;
+			UserProfileDashboardObj.Email = data.Email;
+			UserProfileDashboardObj.NumberOfTeam = 0;
+			UserProfileDashboardObj.JoinDate = data.JoinDate;
+			UserProfileDashboardObj.ImgPath = data.ImgPath;
+			UserProfileDashboardObj.ImgPhoto = "{{BaseUrl}}" + data.ImgPath.replace("assets", "static") + "/photo_128." + data.ImgExt;
+			model.UserProfileDashboard(UserProfileDashboardObj);
+		}, undefined);
+	}
+
+	$(document).ready(function(){
+		LoadUserProfileDashboard();
+	});
+</script>
+<div class="row user-profile user-profile-dashboard content-detail" data-bind="with: model.UserProfileDashboard">
+	<div class="col-md-3 user-profile-img-wrapper">
+		<img class="img-64" data-bind="attr: { 'src': (ImgPath==''?'{{BaseUrl}}static/photos/non-profile.jpg':ImgPhoto), 'alt': EmployeeId }" />
+	</div>
+	<div class="col-md-9">
+		<div class="row form-group user-profile-greet-name">
+			<span class="user-profile-greet">Welcome back,</span>
+			<h4 class="user-profile-name" data-bind="text: Name">Eaciit Emp</h4>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-4 align-right">Employee ID</label>
+			<div class="col-md-8">
+				:&nbsp;&nbsp;<span data-bind="text: EmployeeId">10001</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-4 align-right">Designation</label>
+			<div class="col-md-8">
+				:&nbsp;&nbsp;<span data-bind="text: Designation">Project Engineer</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-4 align-right">Department</label>
+			<div class="col-md-8">
+				:&nbsp;&nbsp;<span data-bind="text: Department">Project</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-4 align-right">Location</label>
+			<div class="col-md-8">
+				:&nbsp;&nbsp;<span data-bind="text: Location">Head Office</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-4 align-right">Date of Joining</label>
+			<div class="col-md-8">
+				:&nbsp;&nbsp;<span data-bind="text: moment(JoinDate).format('DD MMMM YYYY')"></span>
+			</div>
+		</div>
+	</div>
+</div>

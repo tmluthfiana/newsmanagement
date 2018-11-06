@@ -1,0 +1,73 @@
+<script>
+	var UserProfileSimpleObj = {
+		EmployeeId: '',
+		Name: '',
+		Location: '',
+		Designation: '',
+		Department: '',
+		NumberOfTeam: 0,
+		Lead: '',
+		JoinDate: '',
+		HoD: '',
+		Management: '',
+		Email: '',
+		ImgPhoto: '',
+		ImgPath: ''
+	};
+	model.CurrEmpIdSimple = ko.observable('');
+	model.UserProfileSimple = ko.observable(UserProfileSimpleObj);
+	function LoadUserProfileSimple() {
+		var sUrl = "{{BaseUrl}}userprofile/getuserprofile";
+		ajaxPost(sUrl, { EmployeeId: model.CurrEmpIdSimple() }, function(data){
+			UserProfileSimpleObj.EmployeeId = data.EmployeeId;
+			UserProfileSimpleObj.Name = data.EmployeeName;
+			UserProfileSimpleObj.Location = data.Location.LocationName;
+			UserProfileSimpleObj.Designation = data.Designation.DesignationName;
+			UserProfileSimpleObj.Department = data.Department.DepartmentName;
+			UserProfileSimpleObj.Lead = data.LeadName;
+			UserProfileSimpleObj.HoD = data.HODName;
+			UserProfileSimpleObj.Management = data.ManagementName;
+			UserProfileSimpleObj.Email = data.Email;
+			UserProfileSimpleObj.NumberOfTeam = 0;
+			UserProfileSimpleObj.JoinDate = data.JoinDate;
+			UserProfileSimpleObj.ImgPath = data.ImgPath;
+			UserProfileSimpleObj.ImgPhoto = "{{BaseUrl}}" + data.ImgPath.replace("assets", "static") + "/photo_128." + data.ImgExt;
+			model.UserProfileSimple(UserProfileSimpleObj);
+		}, undefined);
+	}
+
+	$(document).ready(function(){
+		LoadUserProfileSimple();
+	});
+</script>
+<div class="row user-profile content-detail" data-bind="with: model.UserProfileSimple">
+	<div class="col-md-2 user-profile-img-wrapper">
+		<img data-bind="attr: { 'src': (ImgPath==''?'{{BaseUrl}}static/photos/non-profile.jpg':ImgPhoto), 'alt': EmployeeId }" class="img-64" />
+	</div>
+	<div class="col-md-10">
+		<div class="row form-group">
+			<label class="control-label col-md-2">Employee ID</label>
+			<div class="col-md-10">
+				:&nbsp;&nbsp;<span data-bind="text: EmployeeId">10001</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-2">Name</label>
+			<div class="col-md-10">
+				:&nbsp;&nbsp;<span data-bind="text: Name">Eaciit Emp</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-2">Designation</label>
+			<div class="col-md-10">
+				:&nbsp;&nbsp;<span data-bind="text: Designation">Project Engineer</span>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="control-label col-md-2">Department</label>
+			<div class="col-md-10">
+				:&nbsp;&nbsp;<span data-bind="text: Department">Project</span>&nbsp;&nbsp;-&nbsp;&nbsp;<span data-bind="text: Location">Head Office</span>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Kumparan">
+
+  <title>Kumparan</title>
+
+  <link rel="shortcut icon" href="{{BaseUrl}}static/favicon1.ico" type="image/x-icon">
+  <link rel="icon" href="{{BaseUrl}}static/favicon.ico" type="image/x-icon">
+
+  <script src="{{BaseUrl}}static/js/jquery.min.js"></script>
+  <script src="{{BaseUrl}}static/js/knockout.min.js"></script>
+  <script src="{{BaseUrl}}static/js/ko-mapping.js"></script>
+  <script src="{{BaseUrl}}static/js/kendoui/js/kendo.all.min.js"></script>
+  <script src="{{BaseUrl}}static/js/knockout-kendo.min.js"></script>
+  <script src="{{BaseUrl}}static/js/knockout.validation.min.js"></script>
+  <script src="{{BaseUrl}}static/js/bootstrap.min.js"></script>
+  <script src="{{BaseUrl}}static/js/bootbox.js"></script>
+  <script src="{{BaseUrl}}static/js/sweet-alert.min.js"></script>
+  <script src="{{BaseUrl}}static/js/jquery.bootstrap-touchspin.min.js"></script>
+  <script src="{{BaseUrl}}static/js/ec-common.js"></script>
+  <script src="{{BaseUrl}}static/js/jszip.min.js"></script>
+  <script src="{{BaseUrl}}static/js/jdeconfiguration.js"></script>
+
+  <link href="{{BaseUrl}}static/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.default.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.common.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.material.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.common-bootstrap.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.dataviz.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.dataviz.bootstrap.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.dataviz.metro.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{BaseUrl}}static/js/kendoui/styles/kendo.metro.min.css" type="text/css" rel="stylesheet" />
+
+  <link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/sweet-alert.css">
+  <link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/jquery.bootstrap-touchspin.min.css">
+  <link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/default.css">
+  <link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/custom.css">
+  <link rel="stylesheet" type="text/css" href="{{BaseUrl}}static/css/loader.css">
+
+  <script type="text/javascript">
+    var model = {
+      Processing: ko.observable(false),
+      SelectedMenu: ko.observable(),
+      PageTitle: ko.observable(''),
+      Breadcrumbs: ko.observableArray([]),
+      MainMenus: ko.observableArray([])
+    };
+        function MenuItem(id, url, title, group, submenus) {
+            var obj = {
+                _id: ko.observable(id),
+                Group: ko.observable(group),
+                Title: ko.observable(title == undefined ? id : title),
+                Url: ko.observable(url),
+                Submenus: ko.observableArray(submenus)
+            };
+
+            return obj;
+        };
+
+        var menus = [
+         new MenuItem("databrowser", "#", "Data Browser", "databrowser", []),
+        ];
+
+        model.MainMenus(menus);
+  </script>
+
+<script id="navbarTemplate" type="text/html">
+        <!-- ko if: Submenus().length==0 -->
+        <li data-bind="css:{active:$root.SelectedMenu()==Group()}">
+            <a data-bind="text: Title(), attr:{href:Url()}"></a>
+        </li>
+        
+  </script>
+
+  <script id="navbarSubTemplate" type="text/html">
+        <!-- ko if: Submenus().length==0 -->
+        <li data-bind="css:{active:$root.SelectedMenu()==Group()}">
+            <a data-bind="text: Title(), attr:{href:Url()}"></a>
+        </li>
+        <!-- /ko -->
+        <!-- ko if: Submenus().length>0 -->
+        <li data-bind="css:{active:$root.SelectedMenu()==Group}" class="dropdown-submenu">
+            <a data-bind="text: Title()" style="cursor:pointer" class="dropdown-toggle" data-toggle="dropdown"></a>
+            <ul class="dropdown-menu" role="menu" data-bind="template:{name:'navbarSubTemplate', foreach:Submenus()}"></ul>
+        </li>
+        <!-- /ko -->
+  </script>
+</head>
+<body>
+
+<div id="wrapper">
+
+  <header>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{BaseUrl}}dashboard/default"><img src="{{BaseUrl}}static/img/logo.jpg" height="50" /><span>Kumparan</span></a>
+            </div>
+            
+
+          <!-- <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right user-info"> -->
+            <ul class="nav navbar-nav navbar-toolbar navbar-right navbar-toolbar-right user-info" style="padding-right:10px">
+              <li class="nav navbar-nav navbar-toolbar "><label data-bind="text: profilename"></label><br><label data-bind="text: profilerole"></label>
+              </li>
+              <li class="dropdown">
+                <a class="navbar-avatar dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
+                  
+                  <div><span class="avatar avatar-online">
+                    <img id="user-icon-photo" src="{{BaseUrl}}static/img/no-user-photo.png" alt="..." />
+                    <i></i>
+                  </span></div>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                  <li role="presentation">
+                    <a data-toggle="modal" onclick="ShowForm()" role="menuitem"><i class="fa fa-user" aria-hidden="true"></i> Edit Profile</a>
+                  </li>
+                  <li class="divider" role="presentation"></li>
+                  <li role="presentation">
+                    <a href="{{BaseUrl}}login/dologout" role="menuitem"><i class="icon wb-power" aria-hidden="true"></i> Logout</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+        </div>
+        <div class="container-fluid navbar-nav-wrapper">
+              <ul class="nav navbar-nav" data-bind="template:{name:'navbarTemplate', foreach:model.MainMenus}"></ul>
+          </div>
+      </nav>
+  </header>
+
+  <div class="container-fluid">
+
+    <div class="content">
+      {{.Content}}
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Form Modal -->
+<div class="modal fade modal-fade-in-scale-up" id="modalForm" aria-hidden="true" aria-labelledby="modalTitle" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">×</span>
+      </button>
+      <h4 class="modal-title">Edit User Data</h4>
+    </div>
+    <div class="modal-body">
+      <div class="form-input row" data-bind="visible: !model.Processing()" >
+        <input type="hidden" id="id" name="id" data-bind="value: model.CurrentData().Id" />
+        <div class="form-group col-md-12">
+          <label class="control-label col-md-4">Username</label>
+          <div class="control-input col-md-6" data-bind="validationElement: model.CurrentData().Username">
+            <input type="text" name="name" id="name" class="input-sm form-control" placeholder="Type Username" data-bind="value: model.CurrentData().Username" required />
+            <span class="k-invalid-msg" data-for="name"></span>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="control-label col-md-4">Password</label>
+          <div class="control-input col-md-6" data-bind="validationElement: model.CurrentData().Password">
+            <input type="password" name="password" id="password" class="input-sm form-control" placeholder="password" data-bind="value: model.CurrentData().Password" required />
+            <span class="k-invalid-msg" data-for="password"></span>
+          </div>
+        </div>
+        <input type="hidden" id="Role" name="Role" data-bind="value: model.CurrentData().Role" />
+        <center>
+        <div class="form-group col-md-12">
+          <div class="form-group">
+              <div class="align_center">
+                <img id="imgprofile" src="{{BaseUrl}}static/photos/non-profile.jpg" alt="your image" />
+              </div>
+            </div>
+          </div>
+        </center>
+        <div class="form-group col-md-12 choosefile">
+          <label class="control-label col-md-4">Upload Photo</label>
+          <div class="control-input col-md-6">
+            <input type='file' id="imgfile" onchange="readURL(this);" accept="image/jpeg, image/png" />
+          </div>
+          <div class="col-md-2">
+            <button id="btnClearImg" onclick="clearImg();" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></button>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" data-bind="visible: !model.Processing()">
+        <button type="button" class="btn btn-default margin-0" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Form Modal -->
+
+<script type="text/javascript">
+  model.passwordTemp = ko.observable("");
+  model.profilename = ko.observable("");
+  model.profilerole = ko.observable("");
+
+  var UserObj = { Id: '', Username: '', Password: ko.observable(""), Role: '', Photo: '', ImgOriginPath: '', Ext: '', IsHas: ko.observable(false)};
+
+function ShowForm(){
+    ResetForm();
+    model.resetValidation(".modal-body");
+    $("#password").removeAttr('required');
+    var url = "{{BaseUrl}}user/getuserdata";
+    var param = {};
+    model.Processing(true);
+    ajaxPost(url, param, function(data){
+      model.CurrentData({ Id: data.data[0].Id, Username: data.data[0].Username, Password: ko.observable(""), Role: data.data[0].Role,  IsHas: ko.observable(false)});
+      model.passwordTemp(data.data[0].Password);
+      $("#modalForm").modal('show');
+
+      model.Processing(false);
+
+    }, undefined);
+}
+
+function Save() {
+      if (!model.isFormValid(".modal-body")) {
+        return;
+      }
+
+
+      model.CurrentData().Photo = "/static/photos/" + model.CurrentData().Username
+
+      if($("#imgfile").val() != "") {
+        model.CurrentData().Ext = $("#imgfile").val().split('.').pop();
+      }
+
+      var url = "{{BaseUrl}}user/update";
+
+      if(model.CurrentData().Password() == "") {
+        model.CurrentData().Password(model.passwordTemp());
+        model.CurrentData().IsHas(false);
+      }
+      else {
+        model.CurrentData().IsHas(true);
+      }
+
+      var param = model.CurrentData();
+      $("#modalForm").modal('hide');
+      model.Processing(true);
+      param = ko.mapping.fromJS(model.CurrentData());
+      ajaxPost(url, param, function(data) {
+        if(data.Success) {
+          JdeConfiguration.uploadImageProfile($("#imgfile"),model.CurrentData().Username, "{{BaseUrl}}user/saveimageprofile", "user");
+          ResetForm();
+          clearValidation();
+
+          swal('Success', 'Data has been saved successfully!', 'success');
+          model.Processing(false);
+        } else {
+          swal(data.Message, data.error, 'error');
+          model.Processing(false);
+        }
+      }, undefined);
+}
+
+model.CurrentData = ko.observable(UserObj);
+
+function ResetForm(){
+  model.CurrentData(UserObj);
+  model.CurrentData({ Id: '', Username: '', Password: '', Role: '', ishas:'' });
+
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#imgprofile')
+                .attr('src', e.target.result)
+                .width(128)
+                .height(128);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function readImageProfile() {
+  var url = "{{BaseUrl}}user/getuserprofile";
+
+  ajaxPost(url, "", function(res){
+    $("#user-icon-photo").attr('src', res.PathImage);
+    $('#imgprofile')
+                .attr('src', res.PathImage)
+                .width(128)
+                .height(128);
+    model.profilename(res.Username);
+    model.profilerole(res.UserRole);
+  });
+}
+
+function imageExists(image_url){
+    var http = new XMLHttpRequest();
+
+    http.open('HEAD', image_url, false);
+    http.send();
+
+    return http.status != 404;
+}
+
+function clearImg(){
+    $('#imgprofile')
+                .attr('src', '{{BaseUrl}}static/photos/non-profile.jpg');
+    $('#imgfile').val('');
+}
+
+function clearValidation() {
+    $("div").removeClass("validationElement");
+    $(".validationMessage").hide();
+  }
+
+model.isFormValid = function (selector) {
+    model.resetValidation(selector);
+    var $validator = $(selector).data("kendoValidator");
+    return ($validator.validate());
+};
+
+model.resetValidation = function (selectorID) {
+    var $form = $(selectorID).data("kendoValidator");
+    if ($form == undefined) {
+        $(selectorID).kendoValidator();
+        $form = $(selectorID).data("kendoValidator");
+    }
+
+    $form.hideMessages();
+};
+
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    try {
+      $('input[type=text].touchspin').TouchSpin({ max: 1000000000000 });
+    }
+    catch(e) {}
+
+    readImageProfile()
+  });
+
+  ko.applyBindings(model);
+</script>
+
+</body>
+</html>
+

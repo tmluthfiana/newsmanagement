@@ -1,0 +1,275 @@
+<style type="text/css">
+        .mrg {
+        margin-bottom: 10px;
+    }
+
+    .report {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .margin-panel {
+        margin: 15px;
+    }
+</style>
+
+<div class="panel panel-default" >
+    <div class="panel-body">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" id="Tab">
+                <li onclick="" class="active"><a href="#Tab1" data-toggle="tab">News</a></li>
+                <li onclick="" ><a href="#Tab2" data-toggle="tab">Topic</a></li>
+            </ul>
+            <div class="col-md-12">
+                <div class="tab-content">
+                    <div class="row tab-pane Margin-Bottom active" id="Tab1" >
+                         <div class="row">
+                          <div class="col-md-4">
+                              <label class="col-md-2 filter-label blue-color pdRight0">Topic</label>
+                              <div class="col-md-10">
+                                  <input id="dropdownlisttopic">
+                              </div>
+                          </div>
+                        <div class="k-grid-custom">
+                            <div class="k-header k-grid-toolbar">
+                            </div>
+                        </div>
+                        <div id="news"></div>
+                    </div>
+                    <div class="row tab-pane Margin-Bottom" id="Tab2" >
+                        <div class="k-grid-custom">
+                            <div class="k-header k-grid-toolbar">
+
+                            </div>
+                        </div>
+                        <div id="topic"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function() {
+        $("#dropdownlisttopic").kendoDropDownList({
+            index: 0,
+            dataTextField: "topic",
+            dataValueField: "_id",
+            dataSource: {
+                // type: "odata", // specifies data protocol
+                transport: {
+                    read:function(options){
+                        ajaxPost("{{BaseUrl}}databrowser/gettopic", "", function(datas){
+                            options.success(datas.data);  
+                        })
+                    }, 
+                }
+            }
+        });
+    });
+   
+    $("#news").kendoGrid({
+      dataSource: {
+          transport: {
+             read:function(options){
+                  ajaxPost("{{BaseUrl}}databrowser/getnews", "", function(datas){
+                      options.success(datas);  
+                  })
+              }, 
+          },
+          schema: {
+              data: function(data) {      
+                  if (data.total == 0) {
+                      return dataSource;
+                  } else {
+                      return data.data;
+                  }   
+              },
+              total: "total",
+          },
+          pageSize: 10,
+          serverPaging: true,
+          serverSorting: true,
+          serverFiltering: true, 
+      },
+      height: 350,
+      columns: [
+         {
+              field:"_id",
+              title:'News ID',
+              /*filterable: false,*/
+              width:180,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              },
+          },
+          {
+              field:"news_title",
+              title:'Title',
+              /*filterable: false,*/
+              width:180,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              },  
+          },
+          {
+              field:"news_date",
+              title:'Date',
+              /*filterable: false,*/
+              width:130,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              },
+              format: "{0:yyyy/MM/dd}",
+          },
+          {
+              field:"news_status",
+              title:'Status',
+              /*filterable: false,*/
+              width:130,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              }
+          },
+          {
+              field:"news_detail",
+              title:'Detail',
+              /*filterable: false,*/
+              width:250,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              }
+          },
+      ],
+      sortable: true,
+      pageable: {
+          refresh: true,
+          pageSizes: true,
+          buttonCount: 1,
+          pageSize: 20,
+           pageSizes: [5, 10, 20],
+      },
+      // filterable: {
+      //     extra:false, 
+      //     operators: {
+      //         string: {
+      //             contains: "Contains",
+      //             startswith: "Starts with",
+      //             eq: "Is equal to",
+      //             neq: "Is not equal to",
+      //             doesnotcontain: "Does not contain",
+      //             endswith: "Ends with"
+      //         },
+      //     }
+      // }, 
+      // height: 350,
+    });
+
+    $("#topic").kendoGrid({
+      dataSource: {
+          transport: {
+             read:function(options){
+                  ajaxPost("{{BaseUrl}}databrowser/gettopic", "", function(datas){
+                      options.success(datas);  
+                  })
+              }, 
+          },
+          schema: {
+              data: function(data) {      
+                  if (data.total == 0) {
+                      return dataSource;
+                  } else {
+                      return data.data;
+                  }   
+              },
+              total: "total",
+          },
+          pageSize: 10,
+          serverPaging: true,
+          serverSorting: true,
+          serverFiltering: true, 
+      },
+      height: 350,
+      columns: [
+         {
+              field:"_id",
+              title:'Topic ID',
+              /*filterable: false,*/
+              width:180,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              },
+          },
+          {
+              field:"topic",
+              title:'Topic',
+              /*filterable: false,*/
+              width:180,
+              attributes: {
+                  "class": "field-ellipsis"
+              },
+              headerAttributes: {
+                  "class": "align-left"
+              },  
+          },
+          // {
+          //     field:"news_id",
+          //     title:'News ID',
+          //     /*filterable: false,*/
+          //     width:130,
+          //     attributes: {
+          //         "class": "field-ellipsis"
+          //     },
+          //     headerAttributes: {
+          //         "class": "align-left"
+          //     },
+          //     format: "{0:yyyy/MM/dd}",
+          // },
+      ],
+      sortable: true,
+      pageable: {
+          refresh: true,
+          pageSizes: true,
+          buttonCount: 1,
+          pageSize: 20,
+           pageSizes: [5, 10, 20],
+      },
+      // filterable: {
+      //     extra:false, 
+      //     operators: {
+      //         string: {
+      //             contains: "Contains",
+      //             startswith: "Starts with",
+      //             eq: "Is equal to",
+      //             neq: "Is not equal to",
+      //             doesnotcontain: "Does not contain",
+      //             endswith: "Ends with"
+      //         },
+      //     }
+      // }, 
+      // height: 350,
+    });
+
+    
+</script>
