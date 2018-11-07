@@ -112,7 +112,9 @@ func (c *DataBrowserController) SaveNews(k *knot.WebContext) interface{} {
 	payload := tk.M{}
 	_ = k.GetPayload(&payload)
 
-	payload.Set("_id", tk.RandomString(32))
+	id := payload.GetString("news_title")
+
+	payload.Set("_id", id)
 
 	ext := c.DB().Connection.NewQuery().
 		From("news").
@@ -219,8 +221,6 @@ func (c *DataBrowserController) SaveTopic(k *knot.WebContext) interface{} {
 
 	payload := tk.M{}
 	_ = k.GetPayload(&payload)
-
-	payload.Set("_id", tk.RandomString(32))
 
 	ext := c.DB().Connection.NewQuery().
 		From("topic").
